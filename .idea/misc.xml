@@ -11,7 +11,10 @@
         <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/drawable/ic_more.xml" value="0.2595" />
         <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/drawable/ic_refresh.xml" value="0.2595" />
         <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/drawable/ic_share.xml" value="0.2595" />
+        <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/layout/activity_links.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/layout/activity_setting.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidStudioProjects/MBrowser/app/src/main/res/layout/drawer_layout.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

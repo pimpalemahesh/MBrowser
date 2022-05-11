@@ -1,39 +1,40 @@
-package com.myinnovation.mbrowser;
-
-import static com.myinnovation.mbrowser.R.drawable.ic_cancle;
+package com.myinnovation.mbrowser.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.myinnovation.mbrowser.MyWebViewClient;
+import com.myinnovation.mbrowser.R;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageView link, imageview, back, forward, refresh, more, share;
     EditText searchField;
+    Button setting, bookmarks;
     WebView webView;
     ProgressBar bar;
+    DrawerLayout drawerLayout;
+//    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         link = findViewById(R.id.link);
         imageview = findViewById(R.id.desImageview);
         back = findViewById(R.id.leftarrow);
@@ -44,12 +45,28 @@ public class MainActivity extends AppCompatActivity {
         searchField = findViewById(R.id.addresslink);
         webView = findViewById(R.id.webPage);
         bar = findViewById(R.id.bar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        setting = findViewById(R.id.setting);
+        bookmarks = findViewById(R.id.bookmarks);
+
+        setting.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
+        });
+
+        bookmarks.setOnClickListener(view -> {
+            Toast.makeText(MainActivity.this, "Bookmark page", Toast.LENGTH_LONG).show();
+        });
+//        navigationView = findViewById(R.id.navigationView);
+
+//        if(drawerLayout.isOpen()){
+//            drawerLayout.closeDrawer(GravityCompat.END, false);
+//        }
+
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(true);
-
         webView.setWebViewClient(new MyWebViewClient(bar, searchField, MainActivity.this));
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -70,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 } else{
                     LoadUrl(searchField.getText().toString());
-//                        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(searchField.getWindowToken(),0);
                     return true;
                 }
             }
@@ -111,6 +126,17 @@ public class MainActivity extends AppCompatActivity {
 
         more.setOnClickListener(view -> {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_LONG).show();
+//            if(drawerLayout.isOpen()){
+//                drawerLayout.closeDrawers();
+//            } else{
+//                drawerLayout.openDrawer(GravityCompat.END);
+//            }
+
+            if(drawerLayout.getVisibility() == View.VISIBLE){
+                drawerLayout.setVisibility(View.GONE);
+            } else{
+                drawerLayout.setVisibility(View.VISIBLE);
+            }
         });
 
         share.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 intent.setType("text/plain");
                 startActivity(intent);
             }
+        });
+
+        link.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
         });
     }
 
@@ -148,4 +178,5 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }

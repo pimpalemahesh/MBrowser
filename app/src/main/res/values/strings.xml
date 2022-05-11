@@ -4,4 +4,6 @@
     <string name="share">Share</string>
     <string name="back">Back</string>
     <string name="refresh">Refresh</string>
+    <string name="setting">Setting</string>
+    <string name="bookmarks">BookMarks</string>
 </resources>
