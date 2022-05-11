@@ -10,11 +10,14 @@ import android.widget.ProgressBar;
 
 public class MyWebViewClient extends WebViewClient {
     ProgressBar bar;
+    EditText text;
+    String weburl;
 
 
-    public MyWebViewClient(ProgressBar bar) {
+    public MyWebViewClient(ProgressBar bar, EditText text, String url) {
         this.bar = bar;
-//        this.text = text;
+        this.text = text;
+        this.weburl = url;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class MyWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-//        text.setText(url);
+        text.setText(weburl);
         bar.setVisibility(View.VISIBLE);
     }
 

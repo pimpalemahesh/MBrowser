@@ -1,25 +1,20 @@
 package com.myinnovation.mbrowser;
 
-import static com.myinnovation.mbrowser.R.drawable.ic_baseline_mic_24;
 import static com.myinnovation.mbrowser.R.drawable.ic_cancle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(true);
 
-        webView.setWebViewClient(new MyWebViewClient(bar));
+        webView.setWebViewClient(new MyWebViewClient(bar, searchField, webView.getUrl()));
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -61,12 +56,18 @@ public class MainActivity extends AppCompatActivity {
         LoadUrl("google.com");
 
         searchField.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if(i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_DONE){
-                InputMethodManager manager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+//            if(i == EditorInfo.IME_ACTION_GO || i == EditorInfo.IME_ACTION_DONE){
+//                InputMethodManager manager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+//                manager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+//
+//            }
+            if(searchField.getText().toString().isEmpty()){
+                Toast.makeText(this, "Enter URL first", Toast.LENGTH_LONG).show();
+            } else{
                 LoadUrl(searchField.getText().toString());
                 return true;
             }
+
             return false;
         });
 
@@ -109,20 +110,24 @@ public class MainActivity extends AppCompatActivity {
             webView.reload();
         });
 
-        share.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-            startActivity(intent);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+                intent.setType("text/plain");
+                startActivity(intent);
+            }
         });
     }
 
 
-    private void LoadUrl(String url){
-        boolean rightUrl = Patterns.WEB_URL.matcher(url).matches();
-        if(rightUrl){
+    void LoadUrl(String url){
+        boolean matchUrl = Patterns.WEB_URL.matcher(url).matches();
+        if(matchUrl){
             webView.loadUrl(url);
-        } else{
+        }else{
             webView.loadUrl("google.com/search?q="+url);
         }
     }
