@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MBrowser</string>
+    <string name="search_or_type_url">Search or Type URL</string>
+    <string name="share">Share</string>
+    <string name="back">Back</string>
+    <string name="refresh">Refresh</string>
 </resources>
