@@ -1,266 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainActivity"
     tools:context=".Activities.MainActivity">
 
-    <ProgressBar
-        android:id="@+id/bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.github.abdularis.civ.CircleImageView
-        android:id="@+id/link"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/ic_link"
-        app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/neumorphCardView" />
-
-    <soup.neumorphism.NeumorphCardView
-        android:id="@+id/neumorphCardView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="?actionBarSize"
-        app:layout_constraintEnd_toStartOf="@+id/desImageview"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/link"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/addresslink"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@android:color/transparent"
-            android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="4dp"
-            android:fontFamily="@font/oswald"
-            android:hint="@string/search_or_type_url"
-            android:inputType="textUri"
-            android:padding="8dp"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
 
-    </soup.neumorphism.NeumorphCardView>
+        <com.github.abdularis.civ.CircleImageView
+            android:id="@+id/link"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/neumorphCardView" />
 
-    <ImageView
-        android:id="@+id/desImageview"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
-        app:srcCompat="@drawable/ic_cancle" />
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/neumorphCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="?actionBarSize"
+            app:layout_constraintEnd_toStartOf="@+id/desImageview"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/link"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-    <WebView
-        android:id="@+id/webPage"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/neumorphCardView">
-
-    </WebView>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:weightSum="5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <soup.neumorphism.NeumorphImageView
-                android:id="@+id/share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:src="@drawable/ic_share"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+            <EditText
+                android:id="@+id/addresslink"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/transparent"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="4dp"
                 android:fontFamily="@font/oswald"
-                android:text="@string/share"
+                android:hint="@string/search_or_type_url"
+                android:inputType="textUri"
+                android:padding="8dp"
+                android:textColor="@color/grey"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/share"
-                app:layout_constraintStart_toStartOf="@id/share"
-                app:layout_constraintTop_toBottomOf="@id/share" />
+                tools:ignore="TouchTargetSizeCheck" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </soup.neumorphism.NeumorphCardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ImageView
+            android:id="@+id/desImageview"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
+            app:srcCompat="@drawable/ic_cancle" />
+
+        <WebView
+            android:id="@+id/webPage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="0dp"
+            android:layout_marginTop="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView">
 
-            <soup.neumorphism.NeumorphImageView
-                android:id="@+id/leftarrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:src="@drawable/ic_arrow_left"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/oswald"
-                android:text="@string/back"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/leftarrow"
-                app:layout_constraintStart_toStartOf="@id/leftarrow"
-                app:layout_constraintTop_toBottomOf="@id/leftarrow" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <soup.neumorphism.NeumorphImageView
-                android:id="@+id/refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:src="@drawable/ic_refresh"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/oswald"
-                android:text="@string/refresh"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/refresh"
-                app:layout_constraintStart_toStartOf="@id/refresh"
-                app:layout_constraintTop_toBottomOf="@id/refresh" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <soup.neumorphism.NeumorphImageView
-                android:id="@+id/rightarrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:src="@drawable/ic_arrow_right"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/oswald"
-                android:text="Forward"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/rightarrow"
-                app:layout_constraintStart_toStartOf="@id/rightarrow"
-                app:layout_constraintTop_toBottomOf="@id/rightarrow" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <soup.neumorphism.NeumorphImageView
-                android:id="@+id/more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/oswald"
-                android:text="More"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/more"
-                app:layout_constraintStart_toStartOf="@id/more"
-                app:layout_constraintTop_toBottomOf="@id/more" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="140dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/webPage"
-        app:layout_constraintEnd_toEndOf="@+id/webPage"
-        app:layout_constraintTop_toTopOf="@+id/webPage">
+        </WebView>
 
         <include
             layout="@layout/drawer_layout"
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/webPage"
+            app:layout_constraintEnd_toEndOf="@+id/webPage"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
 
-    </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:weightSum="5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <soup.neumorphism.NeumorphImageView
+                        android:id="@+id/share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="24dp"
+                        android:minHeight="24dp"
+                        android:src="@drawable/ic_share"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/oswald"
+                        android:text="@string/share"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/share"
+                        app:layout_constraintStart_toStartOf="@id/share"
+                        app:layout_constraintTop_toBottomOf="@id/share" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <soup.neumorphism.NeumorphImageView
+                        android:id="@+id/leftarrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minWidth="24dp"
+                        android:minHeight="24dp"
+                        android:src="@drawable/ic_arrow_left"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/oswald"
+                        android:text="@string/back"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/leftarrow"
+                        app:layout_constraintStart_toStartOf="@id/leftarrow"
+                        app:layout_constraintTop_toBottomOf="@id/leftarrow" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <soup.neumorphism.NeumorphImageView
+                        android:id="@+id/refresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="24dp"
+                        android:minHeight="24dp"
+                        android:src="@drawable/ic_refresh"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/oswald"
+                        android:text="@string/refresh"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/refresh"
+                        app:layout_constraintStart_toStartOf="@id/refresh"
+                        app:layout_constraintTop_toBottomOf="@id/refresh" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <soup.neumorphism.NeumorphImageView
+                        android:id="@+id/rightarrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minWidth="24dp"
+                        android:minHeight="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/oswald"
+                        android:text="Forward"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/rightarrow"
+                        app:layout_constraintStart_toStartOf="@id/rightarrow"
+                        app:layout_constraintTop_toBottomOf="@id/rightarrow" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <soup.neumorphism.NeumorphImageView
+                        android:id="@+id/more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minWidth="24dp"
+                        android:minHeight="24dp"
+                        android:src="@drawable/ic_more"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/oswald"
+                        android:text="More"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/more"
+                        app:layout_constraintStart_toStartOf="@id/more"
+                        app:layout_constraintTop_toBottomOf="@id/more" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout >
+        <!--    <RelativeLayout-->
+        <!--        android:layout_width="140dp"-->
+        <!--        android:layout_height="0dp"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/webPage"-->
+        <!--        app:layout_constraintEnd_toEndOf="@+id/webPage"-->
+        <!--        app:layout_constraintTop_toTopOf="@+id/webPage">-->
+
+        <!--        <include-->
+        <!--            layout="@layout/drawer_layout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:visibility="gone" />-->
+
+        <!--    </RelativeLayout>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

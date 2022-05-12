@@ -23,20 +23,19 @@ import com.myinnovation.mbrowser.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView link, imageview, back, forward, refresh, more, share;
+    ImageView link, clearText, back, forward, refresh, more, share;
     EditText searchField;
-    Button setting, bookmarks;
+    TextView setting, bookmarks;
     WebView webView;
     ProgressBar bar;
     DrawerLayout drawerLayout;
-//    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         link = findViewById(R.id.link);
-        imageview = findViewById(R.id.desImageview);
+        clearText = findViewById(R.id.desImageview);
         back = findViewById(R.id.leftarrow);
         forward = findViewById(R.id.rightarrow);
         refresh = findViewById(R.id.refresh);
@@ -56,11 +55,7 @@ public class MainActivity extends AppCompatActivity {
         bookmarks.setOnClickListener(view -> {
             Toast.makeText(MainActivity.this, "Bookmark page", Toast.LENGTH_LONG).show();
         });
-//        navigationView = findViewById(R.id.navigationView);
 
-//        if(drawerLayout.isOpen()){
-//            drawerLayout.closeDrawer(GravityCompat.END, false);
-//        }
 
 
         WebSettings settings = webView.getSettings();
@@ -81,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-
+                drawerClose();
                 if(searchField.getText().toString().isEmpty()){
                     Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
                     return false;
@@ -104,33 +99,35 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        imageview.setOnClickListener(view -> {
+        clearText.setOnClickListener(view -> {
+            drawerClose();
             searchField.setText("");
         });
 
         back.setOnClickListener(view -> {
+            drawerClose();
             if (webView.canGoBack()) {
                 webView.goBack();
             }
         });
 
         forward.setOnClickListener(view -> {
+            drawerClose();
             if (webView.canGoForward()) {
                 webView.goForward();
             }
         });
 
         refresh.setOnClickListener(view -> {
+            drawerClose();
             webView.reload();
         });
 
+        webView.setOnClickListener(view -> {
+            drawerClose();
+        });
+
         more.setOnClickListener(view -> {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_LONG).show();
-//            if(drawerLayout.isOpen()){
-//                drawerLayout.closeDrawers();
-//            } else{
-//                drawerLayout.openDrawer(GravityCompat.END);
-//            }
 
             if(drawerLayout.getVisibility() == View.VISIBLE){
                 drawerLayout.setVisibility(View.GONE);
@@ -139,19 +136,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-                intent.setType("text/plain");
-                startActivity(intent);
-            }
+        share.setOnClickListener(view -> {
+            drawerClose();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+            intent.setType("text/plain");
+            startActivity(intent);
         });
 
         link.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            drawerClose();
+            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP));
         });
     }
 
@@ -170,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void drawerClose(){
+        if(drawerLayout.getVisibility() == View.VISIBLE){
+            drawerLayout.setVisibility(View.GONE);
+        }
+    }
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {

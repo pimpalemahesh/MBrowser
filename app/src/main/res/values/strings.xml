@@ -5,5 +5,9 @@
     <string name="back">Back</string>
     <string name="refresh">Refresh</string>
     <string name="setting">Setting</string>
-    <string name="bookmarks">BookMarks</string>
+    <string name="bookmarks">Bookmark</string>
+    <string name="sign_in">Sign In</string>
+    <string name="about">About</string>
+    <string name="history">History</string>
+    <string name="desktop_site">Desktop site</string>
 </resources>
