@@ -11,58 +11,55 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.myinnovation.mbrowser.MyWebViewClient;
+import com.monstertechno.adblocker.AdBlockerWebView;
+import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
+import com.myinnovation.mbrowser.UtilitiClasses.AdBlocker;
+import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
 import com.myinnovation.mbrowser.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView link, clearText, back, forward, refresh, more, share;
+    ImageView link, clearText, back, forward, refresh, more, home;
     EditText searchField;
-    TextView setting, bookmarks;
+    TextView setting, bookmarks, share, about;
     WebView webView;
     ProgressBar bar;
     DrawerLayout drawerLayout;
+    CheckBox desktopMode;
+    Switch adBlockerSwitch;
+    boolean blockAd = false;
+
+    private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
+    private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
+    private final String SEARCH_ENGINE_URL = "google.com/search?q=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        link = findViewById(R.id.link);
-        clearText = findViewById(R.id.desImageview);
-        back = findViewById(R.id.leftarrow);
-        forward = findViewById(R.id.rightarrow);
-        refresh = findViewById(R.id.refresh);
-        more = findViewById(R.id.more);
-        share = findViewById(R.id.share);
-        searchField = findViewById(R.id.addresslink);
-        webView = findViewById(R.id.webPage);
-        bar = findViewById(R.id.bar);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        setting = findViewById(R.id.setting);
-        bookmarks = findViewById(R.id.bookmarks);
-
-        setting.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, SettingActivity.class));
-        });
-
-        bookmarks.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Bookmark page", Toast.LENGTH_LONG).show();
-        });
-
-
+        InitializeViews();
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(true);
-        webView.setWebViewClient(new MyWebViewClient(bar, searchField, MainActivity.this));
+        settings.setDisplayZoomControls(false);
+//        new AdBlockerWebView.init(this).initializeWebView(webView);
+//        webView.setWebViewClient(new AdBlockViewClient(bar, searchField, MainActivity.this));
+        if(!blockAd){
+            new AdBlockerWebView.init(this).initializeWebView(webView);
+            webView.setWebViewClient(new AdBlockViewClient(bar, searchField, MainActivity.this));
+        } else{
+            webView.setWebViewClient(new MyWebViewClient(bar, searchField, MainActivity.this));
+        }
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -104,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
             searchField.setText("");
         });
 
+        home.setOnClickListener(view -> {
+            LoadUrl("google.com");
+        });
+
         back.setOnClickListener(view -> {
             drawerClose();
             if (webView.canGoBack()) {
@@ -128,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         more.setOnClickListener(view -> {
-
             if(drawerLayout.getVisibility() == View.VISIBLE){
                 drawerLayout.setVisibility(View.GONE);
             } else{
@@ -149,6 +149,52 @@ public class MainActivity extends AppCompatActivity {
             drawerClose();
             startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP));
         });
+
+        setting.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
+        });
+
+        bookmarks.setOnClickListener(view -> {
+            Toast.makeText(MainActivity.this, "Bookmark page", Toast.LENGTH_LONG).show();
+        });
+
+        desktopMode.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(desktopMode.isChecked()){
+                webView.getSettings().setUserAgentString(DESKTOP_USER_AGENT);
+                webView.reload();
+                drawerClose();
+            }
+            else{
+                webView.getSettings().setUserAgentString(MOBILE_USER_AGENT);
+                webView.reload();
+                drawerClose();
+            }
+        });
+
+        adBlockerSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+            blockAd = checked;
+            drawerClose();
+            webView.reload();
+        });
+    }
+
+    private void InitializeViews() {
+        link = findViewById(R.id.link);
+        clearText = findViewById(R.id.desImageview);
+        home = findViewById(R.id.home);
+        back = findViewById(R.id.leftarrow);
+        forward = findViewById(R.id.rightarrow);
+        refresh = findViewById(R.id.refresh);
+        more = findViewById(R.id.more);
+        share = findViewById(R.id.share);
+        searchField = findViewById(R.id.addresslink);
+        webView = findViewById(R.id.webPage);
+        bar = findViewById(R.id.bar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        setting = findViewById(R.id.setting);
+        bookmarks = findViewById(R.id.bookmarks);
+        desktopMode = findViewById(R.id.check_desktop_mode);
+        adBlockerSwitch = findViewById(R.id.switch_ad_blocker);
     }
 
 
@@ -161,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             if (matchUrl) {
                 webView.loadUrl(url);
             } else {
-                webView.loadUrl("google.com/search?q=" + url);
+                webView.loadUrl(SEARCH_ENGINE_URL + url);
             }
         }
     }

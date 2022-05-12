@@ -119,12 +119,12 @@
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/share"
+                        android:id="@+id/home"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="24dp"
                         android:minHeight="24dp"
-                        android:src="@drawable/ic_share"
+                        android:src="@drawable/ic_home"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -134,12 +134,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/oswald"
-                        android:text="@string/share"
+                        android:text="@string/home"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/share"
-                        app:layout_constraintStart_toStartOf="@id/share"
-                        app:layout_constraintTop_toBottomOf="@id/share" />
+                        app:layout_constraintEnd_toEndOf="@id/home"
+                        app:layout_constraintStart_toStartOf="@id/home"
+                        app:layout_constraintTop_toBottomOf="@id/home" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,4 +10,6 @@
     <string name="about">About</string>
     <string name="history">History</string>
     <string name="desktop_site">Desktop site</string>
+    <string name="home">Home</string>
+    <string name="ad_blocker">Ad Blocker</string>
 </resources>
