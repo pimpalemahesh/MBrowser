@@ -30,7 +30,6 @@ public class LinksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLinksBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setSupportActionBar(binding.toolbar);
 
         impList = new ArrayList<>();
         trendList = new ArrayList<>();

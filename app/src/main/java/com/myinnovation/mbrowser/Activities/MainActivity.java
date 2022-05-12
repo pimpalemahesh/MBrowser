@@ -1,86 +1,104 @@
 package com.myinnovation.mbrowser.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.monstertechno.adblocker.AdBlockerWebView;
 import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
-import com.myinnovation.mbrowser.UtilitiClasses.AdBlocker;
 import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
 import com.myinnovation.mbrowser.R;
+import com.myinnovation.mbrowser.databinding.ActivityMainBinding;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView link, clearText, back, forward, refresh, more, home;
-    EditText searchField;
-    TextView setting, bookmarks, share, about;
+    ActivityMainBinding binding;
+    TextView setting, bookmarks, share, about, history;
     WebView webView;
-    ProgressBar bar;
     DrawerLayout drawerLayout;
     CheckBox desktopMode;
-    Switch adBlockerSwitch;
+    SwitchCompat adBlockerSwitch;
     boolean blockAd = false;
-
+    private String PREVIOUSURL = "";
     private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
     private final String SEARCH_ENGINE_URL = "google.com/search?q=";
+    private final String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         InitializeViews();
+        LoadHomeImage();
+        drawerLayout.setVisibility(View.GONE);
 
+        
+        // use getIntent value only at once and then intent is killed.
+        if(getIntent().getExtras() != null){
+            PREVIOUSURL = getIntent().getStringExtra("URL");
+            LoadUrl(PREVIOUSURL);
+            webView.setVisibility(View.VISIBLE);
+            binding.homeImage.setVisibility(View.GONE);
+            webView.reload();
+            getIntent().removeExtra("URL");
+        }
+
+        // drawerClose checks
+//        drawerClose();
+
+        // WebView implementation
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(false);
-//        new AdBlockerWebView.init(this).initializeWebView(webView);
-//        webView.setWebViewClient(new AdBlockViewClient(bar, searchField, MainActivity.this));
+
+        // Ad Blocker Implementation
         if(!blockAd){
             new AdBlockerWebView.init(this).initializeWebView(webView);
-            webView.setWebViewClient(new AdBlockViewClient(bar, searchField, MainActivity.this));
+            webView.setWebViewClient(new AdBlockViewClient(binding.bar, binding.addresslink, MainActivity.this));
         } else{
-            webView.setWebViewClient(new MyWebViewClient(bar, searchField, MainActivity.this));
+            webView.setWebViewClient(new MyWebViewClient(binding.bar, binding.addresslink, MainActivity.this));
         }
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                bar.setProgress(newProgress);
+                binding.bar.setProgress(newProgress);
             }
         });
 
-        LoadUrl("google.com");
+//        LoadUrl("google.com");
+//        if(binding.addresslink.isFocused() || !binding.addresslink.getText().toString().isEmpty()){
+//            webView.setVisibility(View.VISIBLE);
+//            binding.homeImage.setVisibility(View.GONE);
+//        }
+//        else{
+//            webView.setVisibility(View.GONE);
+//            binding.homeImage.setVisibility(View.VISIBLE);
+//        }
 
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                drawerClose();
-                if(searchField.getText().toString().isEmpty()){
-                    Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
-                    return false;
-                } else{
-                    LoadUrl(searchField.getText().toString());
-                    return true;
-                }
+        binding.addresslink.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            drawerClose();
+            if(binding.addresslink.getText().toString().isEmpty()){
+                Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
+                return false;
+            } else{
+                LoadUrl(binding.addresslink.getText().toString());
+                return true;
             }
         });
 
@@ -96,45 +114,61 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        clearText.setOnClickListener(view -> {
+        binding.clearText.setOnClickListener(view -> {
             drawerClose();
-            searchField.setText("");
+            binding.addresslink.setText("");
         });
 
-        home.setOnClickListener(view -> {
-            LoadUrl("google.com");
+        binding.home.setOnClickListener(view -> {
+            webView.destroy();
+            webView.setVisibility(View.GONE);
+            binding.homeImage.setVisibility(View.VISIBLE);
+            binding.addresslink.setText("");
+            binding.addresslink.clearFocus();
+            recreate();
         });
 
-        back.setOnClickListener(view -> {
+        binding.back.setOnClickListener(view -> {
             drawerClose();
             if (webView.canGoBack()) {
                 webView.goBack();
             }
         });
 
-        forward.setOnClickListener(view -> {
+        binding.forward.setOnClickListener(view -> {
             drawerClose();
             if (webView.canGoForward()) {
                 webView.goForward();
             }
         });
 
-        refresh.setOnClickListener(view -> {
+        binding.refresh.setOnClickListener(view -> {
             drawerClose();
-            webView.reload();
+            if(binding.addresslink.getText().toString().isEmpty()){
+                LoadHomeImage();
+                recreate();
+                LoadUrl("");
+            } else{
+                webView.reload();
+            }
         });
 
-        webView.setOnClickListener(view -> {
-            drawerClose();
-        });
-
-        more.setOnClickListener(view -> {
+        binding.more.setOnClickListener(view -> {
             if(drawerLayout.getVisibility() == View.VISIBLE){
                 drawerLayout.setVisibility(View.GONE);
             } else{
                 drawerLayout.setVisibility(View.VISIBLE);
             }
         });
+
+
+
+        binding.link.setOnClickListener(view -> {
+            drawerClose();
+            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP));
+        });
+
+        // These are methods implemented on textViews in drawerLayout field
 
         share.setOnClickListener(view -> {
             drawerClose();
@@ -145,17 +179,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        link.setOnClickListener(view -> {
-            drawerClose();
-            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP));
-        });
-
         setting.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, SettingActivity.class));
         });
 
+        history.setOnClickListener(view -> {
+            Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
+        });
+
         bookmarks.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Bookmark page", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
         });
 
         desktopMode.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -178,21 +211,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void LoadHomeImage() {
+        Picasso.get()
+                .load(HOMEIMAGEURL)
+                .placeholder(R.drawable.ic__)
+                .into(binding.homeImage);
+    }
+
     private void InitializeViews() {
-        link = findViewById(R.id.link);
-        clearText = findViewById(R.id.desImageview);
-        home = findViewById(R.id.home);
-        back = findViewById(R.id.leftarrow);
-        forward = findViewById(R.id.rightarrow);
-        refresh = findViewById(R.id.refresh);
-        more = findViewById(R.id.more);
-        share = findViewById(R.id.share);
-        searchField = findViewById(R.id.addresslink);
         webView = findViewById(R.id.webPage);
-        bar = findViewById(R.id.bar);
         drawerLayout = findViewById(R.id.drawerLayout);
         setting = findViewById(R.id.setting);
         bookmarks = findViewById(R.id.bookmarks);
+        share = findViewById(R.id.share);
+        history = findViewById(R.id.history);
         desktopMode = findViewById(R.id.check_desktop_mode);
         adBlockerSwitch = findViewById(R.id.switch_ad_blocker);
     }
@@ -200,9 +232,13 @@ public class MainActivity extends AppCompatActivity {
 
     void LoadUrl(String url) {
         if(url.isEmpty()){
+            binding.homeImage.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
             Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
             return;
         } else{
+            webView.setVisibility(View.VISIBLE);
+            binding.homeImage.setVisibility(View.GONE);
             boolean matchUrl = Patterns.WEB_URL.matcher(url).matches();
             if (matchUrl) {
                 webView.loadUrl(url);
@@ -216,6 +252,10 @@ public class MainActivity extends AppCompatActivity {
         if(drawerLayout.getVisibility() == View.VISIBLE){
             drawerLayout.setVisibility(View.GONE);
         }
+        if(binding.homeImage.getVisibility() == View.VISIBLE){
+            binding.homeImage.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     public void onBackPressed() {
@@ -226,4 +266,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        webView.destroy();
+        super.onDestroy();
+    }
 }

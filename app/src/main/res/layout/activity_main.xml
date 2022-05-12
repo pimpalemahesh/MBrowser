@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:minHeight="?actionBarSize"
-            app:layout_constraintEnd_toStartOf="@+id/desImageview"
+            app:layout_constraintEnd_toStartOf="@+id/clearText"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/link"
             app:layout_constraintTop_toTopOf="parent">
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="@android:color/transparent"
-                android:drawableStart="@drawable/ic_search"
+                android:drawableStart="@drawable/ic_icongoogle"
                 android:drawablePadding="4dp"
                 android:fontFamily="@font/oswald"
                 android:hint="@string/search_or_type_url"
@@ -56,7 +56,7 @@
         </soup.neumorphism.NeumorphCardView>
 
         <ImageView
-            android:id="@+id/desImageview"
+            android:id="@+id/clearText"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -65,11 +65,25 @@
             app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
             app:srcCompat="@drawable/ic_cancle" />
 
+        <ImageView
+            android:id="@+id/homeImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="1dp"
+            android:src="@drawable/ic__"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView" />
+
         <WebView
             android:id="@+id/webPage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="1dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/toolbar3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -82,8 +96,8 @@
             layout="@layout/drawer_layout"
             android:layout_width="200dp"
             android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/webPage"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar3"
             app:layout_constraintEnd_toEndOf="@+id/webPage"
             app:layout_constraintTop_toBottomOf="@+id/neumorphCardView" />
 
@@ -103,10 +117,7 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:weightSum="5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,12 +125,13 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/home"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/home"
+                        android:id="@+id/homeImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="24dp"
@@ -137,19 +149,20 @@
                         android:text="@string/home"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/home"
-                        app:layout_constraintStart_toStartOf="@id/home"
-                        app:layout_constraintTop_toBottomOf="@id/home" />
+                        app:layout_constraintEnd_toEndOf="@id/homeImageView"
+                        app:layout_constraintStart_toStartOf="@id/homeImageView"
+                        app:layout_constraintTop_toBottomOf="@id/homeImageView" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/back"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/leftarrow"
+                        android:id="@+id/leftArrowImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -168,19 +181,20 @@
                         android:text="@string/back"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/leftarrow"
-                        app:layout_constraintStart_toStartOf="@id/leftarrow"
-                        app:layout_constraintTop_toBottomOf="@id/leftarrow" />
+                        app:layout_constraintEnd_toEndOf="@id/leftArrowImage"
+                        app:layout_constraintStart_toStartOf="@id/leftArrowImage"
+                        app:layout_constraintTop_toBottomOf="@id/leftArrowImage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/refresh"
+                        android:id="@+id/refreshImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="24dp"
@@ -198,19 +212,20 @@
                         android:text="@string/refresh"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/refresh"
-                        app:layout_constraintStart_toStartOf="@id/refresh"
-                        app:layout_constraintTop_toBottomOf="@id/refresh" />
+                        app:layout_constraintEnd_toEndOf="@id/refreshImage"
+                        app:layout_constraintStart_toStartOf="@id/refreshImage"
+                        app:layout_constraintTop_toBottomOf="@id/refreshImage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/forward"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/rightarrow"
+                        android:id="@+id/rightArrowImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -229,19 +244,20 @@
                         android:text="Forward"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/rightarrow"
-                        app:layout_constraintStart_toStartOf="@id/rightarrow"
-                        app:layout_constraintTop_toBottomOf="@id/rightarrow" />
+                        app:layout_constraintEnd_toEndOf="@id/rightArrowImage"
+                        app:layout_constraintStart_toStartOf="@id/rightArrowImage"
+                        app:layout_constraintTop_toBottomOf="@id/rightArrowImage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/more"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
                     <soup.neumorphism.NeumorphImageView
-                        android:id="@+id/more"
+                        android:id="@+id/moreImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -260,9 +276,9 @@
                         android:text="More"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@id/more"
-                        app:layout_constraintStart_toStartOf="@id/more"
-                        app:layout_constraintTop_toBottomOf="@id/more" />
+                        app:layout_constraintEnd_toEndOf="@id/moreImage"
+                        app:layout_constraintStart_toStartOf="@id/moreImage"
+                        app:layout_constraintTop_toBottomOf="@id/moreImage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
