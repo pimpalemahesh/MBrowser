@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "210398027238",
+    "firebase_url": "https://mbrowser-4f66a-default-rtdb.firebaseio.com",
+    "project_id": "mbrowser-4f66a",
+    "storage_bucket": "mbrowser-4f66a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210398027238:android:f4a5d23a65ee50f2308a27",
+        "android_client_info": {
+          "package_name": "com.myinnovation.mbrowser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210398027238-668j23e8p76k8hh2attt1hdetnc3cne0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myinnovation.mbrowser",
+            "certificate_hash": "2da04d9751e36f3e3112d9811714ed28b1be7b72"
+          }
+        },
+        {
+          "client_id": "210398027238-4hru3sl3uepjl5h8rs0vtackurqbi8us.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALUT1ohVu1waFOXsNNcD7psvGiphSWs-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210398027238-4hru3sl3uepjl5h8rs0vtackurqbi8us.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

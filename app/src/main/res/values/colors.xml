@@ -17,4 +17,6 @@
     <color name="purple">#9C27B0</color>
     <color name="blue">#3F51B5</color>
     <color name="grey">#676767</color>
+    <color name="neumorph_shadowcolorDark">#C4A8E6</color>
+    <color name="neumorph_shadowColorLight">#EAE9EC</color>
 </resources>

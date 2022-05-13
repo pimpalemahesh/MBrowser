@@ -40,7 +40,7 @@ public class LinksActivity extends AppCompatActivity {
         impList.add(new LinkModel("Instagram", R.drawable.instagram, "https://www.instagram.com/"));
         impList.add(new LinkModel("Twitter", R.drawable.twitter, "https://www.twitter.com/"));
         impList.add(new LinkModel("Google Map", R.drawable.googlemaps, "https://www.googlemaps.com/"));
-        impList.add(new LinkModel("Wikipedia", R.drawable.wikipedia, "https://www.wikipedia.com/"));
+        impList.add(new LinkModel("Wikipedia", R.drawable.wikipedia, "https://www.wikipedia.org/"));
         impList.add(new LinkModel("Linkedin", R.drawable.linkedin, "https://www.linkedin.com/"));
 
         impAdapter = new LinkAdapter(this.impList, LinksActivity.this);

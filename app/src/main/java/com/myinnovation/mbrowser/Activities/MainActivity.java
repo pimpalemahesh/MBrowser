@@ -1,9 +1,11 @@
 package com.myinnovation.mbrowser.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,15 +16,27 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 import com.monstertechno.adblocker.AdBlockerWebView;
+import com.myinnovation.mbrowser.Models.UserModel;
 import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
 import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
 import com.myinnovation.mbrowser.R;
 import com.myinnovation.mbrowser.databinding.ActivityMainBinding;
 import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 import soup.neumorphism.NeumorphButton;
 
@@ -30,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     TextView setting, bookmarks, share, about, history;
+    ImageView profileImage;
     NeumorphButton signIn;
     WebView webView;
     DrawerLayout drawerLayout;
@@ -40,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
     private final String SEARCH_ENGINE_URL = "google.com/search?q=";
-    private final String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain";
+    private final String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain,forest,river,stars,space,waterfall,snow,rain";
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         InitializeViews();
+        checkCurrentUser();
         LoadHomeImage();
         drawerLayout.setVisibility(View.GONE);
 
@@ -226,11 +244,14 @@ public class MainActivity extends AppCompatActivity {
     private void LoadHomeImage() {
         Picasso.get()
                 .load(HOMEIMAGEURL)
-                .placeholder(R.drawable.ic__)
+                .placeholder(R.drawable.ic_logo)
                 .into(binding.homeImage);
     }
 
     private void InitializeViews() {
+
+        // DrawerLayout Views
+        profileImage = findViewById(R.id.profileImage);
         webView = findViewById(R.id.webPage);
         drawerLayout = findViewById(R.id.drawerLayout);
         signIn = findViewById(R.id.signIn);
@@ -283,32 +304,50 @@ public class MainActivity extends AppCompatActivity {
 
     private void destroyWebView() {
 
-        // Make sure you remove the WebView from its parent view before doing anything.
         binding.webViewParent.removeAllViews();
-
         webView.clearHistory();
-
-        // NOTE: clears RAM cache, if you pass true, it will also clear the disk cache.
-        // Probably not a great idea to pass true if you have other WebViews still alive.
         webView.clearCache(true);
-
-        // Loading a blank page is optional, but will ensure that the WebView isn't doing anything when you destroy it.
         webView.loadUrl("about:blank");
-
         webView.onPause();
         webView.removeAllViews();
         webView.destroyDrawingCache();
-
-        // NOTE: This pauses JavaScript execution for ALL WebViews,
-        // do not use if you have other WebViews still alive.
-        // If you create another WebView after calling this,
-        // make sure to call mWebView.resumeTimers().
         webView.pauseTimers();
-
-        // NOTE: This can occasionally cause a segfault below API 17 (4.2)
         webView.destroy();
-
-        // Null out the reference so that you don't end up re-using it.
         webView = null;
     }
+
+    private void checkCurrentUser(){
+        if(mAuth.getCurrentUser() != null){
+            FirebaseDatabase mBase = FirebaseDatabase.getInstance();
+            mBase.getReference().child("Users")
+                    .child(Objects.requireNonNull(mAuth.getUid()))
+                    .addValueEventListener(new ValueEventListener() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                    UserModel user = snapshot.getValue(UserModel.class);
+                                    assert user != null;
+                                    signIn.setText(user.getUsername());
+                            }
+                            else{
+                                signIn.setText("User In");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+        }
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            signIn.setText(account.getDisplayName());
+            profileImage.setImageURI(account.getPhotoUrl());
+        }
+    }
+
 }

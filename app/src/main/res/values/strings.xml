@@ -6,7 +6,6 @@
     <string name="refresh">Refresh</string>
     <string name="setting">Setting</string>
     <string name="bookmarks">Bookmark</string>
-    <string name="sign_in">Sign In</string>
     <string name="about">About</string>
     <string name="history">History</string>
     <string name="desktop_site">Desktop site</string>
@@ -16,4 +15,23 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="important">Important Sites</string>
     <string name="trending">Trending Sites</string>
+    <string name="username">UserName</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="google_sign_in">Google Sign In</string>
+    <string name="facebook_sign_in">Facebook Sign In</string>
+    <string name="loginText">I want to Login</string>
+    <string name="signInText">I want to Sign Up</string>
+    <string name="join">Join</string>
+
+
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+
+
 </resources>
