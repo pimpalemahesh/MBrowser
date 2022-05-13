@@ -48,14 +48,20 @@ public class MainActivity extends AppCompatActivity {
 
         
         // use getIntent value only at once and then intent is killed.
-        if(getIntent().getExtras() != null){
-            PREVIOUSURL = getIntent().getStringExtra("URL");
-            LoadUrl(PREVIOUSURL);
-            webView.setVisibility(View.VISIBLE);
-            binding.homeImage.setVisibility(View.GONE);
-            webView.reload();
-            getIntent().removeExtra("URL");
+        try{
+            Bundle data = getIntent().getExtras();
+            if(data != null){
+                PREVIOUSURL = data.getString("URL");
+                LoadUrl(PREVIOUSURL);
+                webView.setVisibility(View.VISIBLE);
+                binding.homeImage.setVisibility(View.GONE);
+                webView.reload();
+                getIntent().removeExtra("URL");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
 
         // drawerClose checks
 //        drawerClose();
@@ -120,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.home.setOnClickListener(view -> {
-            webView.destroy();
-            webView.setVisibility(View.GONE);
+            if(webView != null){
+                destroyWebView();
+            }
             binding.homeImage.setVisibility(View.VISIBLE);
             binding.addresslink.setText("");
             binding.addresslink.clearFocus();
@@ -266,9 +273,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
+
+    private void destroyWebView() {
+
+        // Make sure you remove the WebView from its parent view before doing anything.
+        binding.webViewParent.removeAllViews();
+
+        webView.clearHistory();
+
+        // NOTE: clears RAM cache, if you pass true, it will also clear the disk cache.
+        // Probably not a great idea to pass true if you have other WebViews still alive.
+        webView.clearCache(true);
+
+        // Loading a blank page is optional, but will ensure that the WebView isn't doing anything when you destroy it.
+        webView.loadUrl("about:blank");
+
+        webView.onPause();
+        webView.removeAllViews();
+        webView.destroyDrawingCache();
+
+        // NOTE: This pauses JavaScript execution for ALL WebViews,
+        // do not use if you have other WebViews still alive.
+        // If you create another WebView after calling this,
+        // make sure to call mWebView.resumeTimers().
+        webView.pauseTimers();
+
+        // NOTE: This can occasionally cause a segfault below API 17 (4.2)
         webView.destroy();
-        super.onDestroy();
+
+        // Null out the reference so that you don't end up re-using it.
+        webView = null;
     }
 }
