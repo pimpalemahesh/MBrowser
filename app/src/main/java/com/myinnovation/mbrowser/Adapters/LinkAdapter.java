@@ -14,7 +14,6 @@ import com.myinnovation.mbrowser.Activities.MainActivity;
 import com.myinnovation.mbrowser.Models.LinkModel;
 import com.myinnovation.mbrowser.R;
 import com.myinnovation.mbrowser.databinding.SingleLinkLayoutBinding;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -38,12 +37,12 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
         LinkModel model = list.get(position);
         holder.binding.urlName.setText(model.getUrl_name());
         holder.binding.urlImage.setImageResource(model.getUrl_img());
-
         Bundle data = new Bundle();
         data.putString("URL", model.getUrl());
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtras(data);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         });
 //        Picasso.get()
@@ -52,6 +51,7 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
 //                .into(holder.binding.urlImage);
     }
 
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -59,6 +59,7 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
 
     public class LinkViewHolder extends RecyclerView.ViewHolder{
         SingleLinkLayoutBinding binding;
+
         public LinkViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = SingleLinkLayoutBinding.bind(itemView);
