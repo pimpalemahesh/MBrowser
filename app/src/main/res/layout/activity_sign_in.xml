@@ -140,6 +140,16 @@
 
     </soup.neumorphism.NeumorphCardView>
 
+    <soup.neumorphism.NeumorphImageView
+        android:id="@+id/eyePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/ic_hidden_eye"
+        app:layout_constraintBottom_toBottomOf="@+id/passwordCardView"
+        app:layout_constraintEnd_toEndOf="@+id/passwordCardView"
+        app:layout_constraintTop_toTopOf="@+id/passwordCardView" />
+
     <soup.neumorphism.NeumorphCardView
         android:id="@+id/cPasswordCardView"
         android:layout_width="match_parent"
@@ -171,7 +181,9 @@
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck"
             tools:targetApi="m" />
+
     </soup.neumorphism.NeumorphCardView>
+
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/signInButton"
@@ -192,6 +204,16 @@
         app:neumorph_shadowColorDark="@color/neumorph_shadowcolorDark"
         app:neumorph_shadowColorLight="@color/neumorph_shadowColorLight"
         app:neumorph_shadowElevation="4dp" />
+
+    <soup.neumorphism.NeumorphImageView
+        android:id="@+id/eyeCPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/ic_hidden_eye"
+        app:layout_constraintBottom_toBottomOf="@+id/cPasswordCardView"
+        app:layout_constraintEnd_toEndOf="@+id/cPasswordCardView"
+        app:layout_constraintTop_toTopOf="@+id/cPasswordCardView" />
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/signInFacebookBtn"

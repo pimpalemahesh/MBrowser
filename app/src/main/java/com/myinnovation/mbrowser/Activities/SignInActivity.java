@@ -1,12 +1,13 @@
 package com.myinnovation.mbrowser.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,17 +21,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.myinnovation.mbrowser.Models.UserModel;
 import com.myinnovation.mbrowser.R;
 
+import java.util.Objects;
+
 import soup.neumorphism.NeumorphCardView;
+import soup.neumorphism.NeumorphImageView;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -41,11 +41,13 @@ public class SignInActivity extends AppCompatActivity {
     CallbackManager callbackManager;
 
     EditText _username, _email, _password, _cPassword;
+    NeumorphImageView _eyePassword, _eyeCPassword;
     Button _signIn, _googleSignIn, _facebookSignIn, _switchText;
     NeumorphCardView _userNameCardView, _emailCardView, _passwordCardView, _confirmPasswordCardView;
     ProgressBar _progressBar;
 
     String username, email, password, cpassword;
+    private boolean showPass = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +64,20 @@ public class SignInActivity extends AppCompatActivity {
 
         });
 
-        _googleSignIn.setOnClickListener(view -> {
-            SignInUsingGoogle();
+        _eyePassword.setOnClickListener(view -> {
+            showPass = !showPass;
+            showPassword(showPass, _password, _eyePassword);
         });
 
-        _facebookSignIn.setOnClickListener(view -> {
-            Toast.makeText(SignInActivity.this, "Not implemented yet!", Toast.LENGTH_LONG).show();
+        _eyeCPassword.setOnClickListener(view -> {
+            showPass = !showPass;
+            showPassword(showPass, _cPassword, _eyeCPassword);
         });
+
+
+        _googleSignIn.setOnClickListener(view -> SignInUsingGoogle());
+
+        _facebookSignIn.setOnClickListener(view -> Toast.makeText(SignInActivity.this, "Not implemented yet!", Toast.LENGTH_LONG).show());
 
         _switchText.setOnClickListener(view -> {
             if (_switchText.getText() == getResources().getString(R.string.loginText)) {
@@ -85,6 +94,18 @@ public class SignInActivity extends AppCompatActivity {
                 _switchText.setText(getResources().getString(R.string.loginText));
             }
         });
+    }
+
+    private void showPassword(boolean showPass, EditText pWord, NeumorphImageView eyeImage) {
+        if(showPass){
+            pWord.setTransformationMethod(new PasswordTransformationMethod());
+            pWord.setSelection(pWord.getText().length());
+            eyeImage.setImageResource(R.drawable.ic_hidden_eye);
+        } else{
+            pWord.setTransformationMethod(new SingleLineTransformationMethod());
+            pWord.setSelection(pWord.getText().length());
+            eyeImage.setImageResource(R.drawable.ic_view_eye);
+        }
     }
 
     private void SignInUsingGoogle() {
@@ -119,7 +140,7 @@ public class SignInActivity extends AppCompatActivity {
         _progressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
-                    if (mAuth.getCurrentUser().isEmailVerified()) {
+                    if (Objects.requireNonNull(mAuth.getCurrentUser()).isEmailVerified()) {
                         _username.setText("");
                         _email.setText("");
                         _password.setText("");
@@ -194,27 +215,22 @@ public class SignInActivity extends AppCompatActivity {
                     UserModel user = new UserModel(username, email);
                     mBase.getReference()
                             .child("Users")
-                            .child(mAuth.getUid())
+                            .child(Objects.requireNonNull(mAuth.getUid()))
                             .setValue(user)
-                            .addOnSuccessListener(unused -> {
-                                mAuth.getCurrentUser().sendEmailVerification()
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                _progressBar.setVisibility(View.INVISIBLE);
-                                                _username.setText("");
-                                                _email.setText("");
-                                                _password.setText("");
-                                                _cPassword.setText("");
-                                                _progressBar.setVisibility(View.INVISIBLE);
-                                                Toast.makeText(SignInActivity.this, "Verification email has been sent please verify your email...", Toast.LENGTH_LONG).show();
-                                            }
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            _progressBar.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(SignInActivity.this, "Not able to send verification email", Toast.LENGTH_LONG).show();
-                                        });
-                                })
+                            .addOnSuccessListener(unused -> Objects.requireNonNull(mAuth.getCurrentUser()).sendEmailVerification()
+                                    .addOnSuccessListener(unused1 -> {
+                                        _progressBar.setVisibility(View.INVISIBLE);
+                                        _username.setText("");
+                                        _email.setText("");
+                                        _password.setText("");
+                                        _cPassword.setText("");
+                                        _progressBar.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(SignInActivity.this, "Verification email has been sent please verify your email...", Toast.LENGTH_LONG).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        _progressBar.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(SignInActivity.this, "Not able to send verification email", Toast.LENGTH_LONG).show();
+                                    }))
                             .addOnFailureListener(e -> {
                                 _progressBar.setVisibility(View.INVISIBLE);
                                 _username.setText("");
@@ -245,6 +261,8 @@ public class SignInActivity extends AppCompatActivity {
         _email = findViewById(R.id.email);
         _password = findViewById(R.id.password);
         _cPassword = findViewById(R.id.cPassword);
+        _eyePassword = findViewById(R.id.eyePassword);
+        _eyeCPassword = findViewById(R.id.eyeCPassword);
         _signIn = findViewById(R.id.signInButton);
         _googleSignIn = findViewById(R.id.signInGoogleBtn);
         _facebookSignIn = findViewById(R.id.signInFacebookBtn);

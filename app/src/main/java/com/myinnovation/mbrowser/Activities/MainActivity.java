@@ -85,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        // drawerClose checks
-//        drawerClose();
-
         // WebView implementation
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -110,16 +106,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        LoadUrl("google.com");
-//        if(binding.addresslink.isFocused() || !binding.addresslink.getText().toString().isEmpty()){
-//            webView.setVisibility(View.VISIBLE);
-//            binding.homeImage.setVisibility(View.GONE);
-//        }
-//        else{
-//            webView.setVisibility(View.GONE);
-//            binding.homeImage.setVisibility(View.VISIBLE);
-//        }
-
         binding.addresslink.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             drawerClose();
             if(binding.addresslink.getText().toString().isEmpty()){
@@ -131,17 +117,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        searchField.setOnFocusChangeListener((arg0, gotfocus) -> {
-//            if(gotfocus)
-//            {
-//                searchField.setCompoundDrawables(null, null, null, null);
-//            }
-//            else
-//            {
-//                if(searchField.getText().length()==0)
-//                    searchField.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
-//            }
-//        });
 
         binding.clearText.setOnClickListener(view -> {
             drawerClose();
@@ -297,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
-            super.onBackPressed();
+
         }
     }
 
