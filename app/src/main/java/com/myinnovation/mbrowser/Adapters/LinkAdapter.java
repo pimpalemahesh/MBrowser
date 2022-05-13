@@ -2,6 +2,7 @@ package com.myinnovation.mbrowser.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +38,12 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
         LinkModel model = list.get(position);
         holder.binding.urlName.setText(model.getUrl_name());
         holder.binding.urlImage.setImageResource(model.getUrl_img());
+
+        Bundle data = new Bundle();
+        data.putString("URL", model.getUrl());
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra("URL", model.getUrl());
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtras(data);
             context.startActivity(intent);
         });
 //        Picasso.get()
