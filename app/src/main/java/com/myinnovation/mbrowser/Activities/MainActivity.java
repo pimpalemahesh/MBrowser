@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,8 +29,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 import com.monstertechno.adblocker.AdBlockerWebView;
+import com.myinnovation.mbrowser.Fragment.LinkFragment;
 import com.myinnovation.mbrowser.Models.UserModel;
 import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
 import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
@@ -106,6 +108,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.link.setOnClickListener(view -> {
+//            drawerClose();
+//            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            openFragment();
+        });
+
         binding.addresslink.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             drawerClose();
             if(binding.addresslink.getText().toString().isEmpty()){
@@ -163,12 +171,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        binding.link.setOnClickListener(view -> {
-            drawerClose();
-            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        });
 
         // These are methods implemented on textViews in drawerLayout field
 
@@ -325,4 +327,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void openFragment() {
+        LinkFragment fragment = new LinkFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
+    }
+
+
+
+//    @Override
+//    public void onFragmentInteraction(String sendBackText) {
+//        LoadUrl(sendBackText);
+//        drawerClose();
+//        onBackPressed();
+//    }
 }

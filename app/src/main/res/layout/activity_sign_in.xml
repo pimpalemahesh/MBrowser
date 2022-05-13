@@ -184,6 +184,22 @@
 
     </soup.neumorphism.NeumorphCardView>
 
+    <soup.neumorphism.NeumorphButton
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/oswald"
+        android:padding="16dp"
+        android:text="@string/forgot_password"
+        android:textColor="@color/purple_500"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/signInButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordCardView"
+        app:neumorph_shadowColorDark="@color/neumorph_shadowcolorDark"
+        app:neumorph_shadowColorLight="@color/neumorph_shadowColorLight" />
 
     <soup.neumorphism.NeumorphButton
         android:id="@+id/signInButton"

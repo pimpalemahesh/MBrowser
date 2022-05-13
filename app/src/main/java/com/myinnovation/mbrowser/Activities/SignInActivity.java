@@ -42,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
 
     EditText _username, _email, _password, _cPassword;
     NeumorphImageView _eyePassword, _eyeCPassword;
-    Button _signIn, _googleSignIn, _facebookSignIn, _switchText;
+    Button _signIn, _googleSignIn, _facebookSignIn, _switchText, _forgotPassword;
     NeumorphCardView _userNameCardView, _emailCardView, _passwordCardView, _confirmPasswordCardView;
     ProgressBar _progressBar;
 
@@ -83,15 +83,21 @@ public class SignInActivity extends AppCompatActivity {
             if (_switchText.getText() == getResources().getString(R.string.loginText)) {
                 _userNameCardView.setVisibility(View.INVISIBLE);
                 _confirmPasswordCardView.setVisibility(View.INVISIBLE);
+                _eyeCPassword.setVisibility(View.INVISIBLE);
+                _forgotPassword.setVisibility(View.VISIBLE);
                 _signIn.setText(getResources().getString(R.string.login));
                 _switchText.setText(getResources().getString(R.string.signInText));
+                _username.requestFocus();
             } else {
                 _userNameCardView.setVisibility(View.VISIBLE);
                 _confirmPasswordCardView.setVisibility(View.VISIBLE);
                 _signIn.setText(getResources().getString(R.string.sign_up));
+                _forgotPassword.setVisibility(View.INVISIBLE);
                 _googleSignIn.setVisibility(View.VISIBLE);
                 _facebookSignIn.setVisibility(View.VISIBLE);
+                _eyeCPassword.setVisibility(View.VISIBLE);
                 _switchText.setText(getResources().getString(R.string.loginText));
+                _email.requestFocus();
             }
         });
     }
@@ -266,6 +272,7 @@ public class SignInActivity extends AppCompatActivity {
         _signIn = findViewById(R.id.signInButton);
         _googleSignIn = findViewById(R.id.signInGoogleBtn);
         _facebookSignIn = findViewById(R.id.signInFacebookBtn);
+        _forgotPassword = findViewById(R.id.forgotPassword);
         _progressBar = findViewById(R.id.bar);
         _switchText = findViewById(R.id.neuMorphSwitchText);
         _userNameCardView = findViewById(R.id.usernameCardView);

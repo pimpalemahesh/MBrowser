@@ -20,10 +20,6 @@
             android:name=".Activities.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.LinksActivity"
-            android:exported="false"
-            android:parentActivityName=".Activities.MainActivity" />
-        <activity
             android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
