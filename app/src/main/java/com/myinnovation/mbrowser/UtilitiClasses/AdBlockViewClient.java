@@ -40,6 +40,8 @@ public class AdBlockViewClient extends WebViewClient {
         text.setSelection(text.getText().length());
         text.requestFocus();
         bar.setVisibility(View.VISIBLE);
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(text.getWindowToken(),0);
     }
 
     @Override
@@ -49,6 +51,8 @@ public class AdBlockViewClient extends WebViewClient {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(text.getWindowToken(),0);
     }
+
+
 
     @SuppressWarnings("deprecation")
     @Override

@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,10 +24,13 @@ import com.myinnovation.mbrowser.R;
 import com.myinnovation.mbrowser.databinding.ActivityMainBinding;
 import com.squareup.picasso.Picasso;
 
+import soup.neumorphism.NeumorphButton;
+
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     TextView setting, bookmarks, share, about, history;
+    NeumorphButton signIn;
     WebView webView;
     DrawerLayout drawerLayout;
     CheckBox desktopMode;
@@ -123,15 +128,12 @@ public class MainActivity extends AppCompatActivity {
         binding.clearText.setOnClickListener(view -> {
             drawerClose();
             binding.addresslink.setText("");
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(binding.addresslink, 0);
         });
 
         binding.home.setOnClickListener(view -> {
-            if(webView != null){
-                destroyWebView();
-            }
-            binding.homeImage.setVisibility(View.VISIBLE);
             binding.addresslink.setText("");
-            binding.addresslink.clearFocus();
             recreate();
         });
 
@@ -172,11 +174,14 @@ public class MainActivity extends AppCompatActivity {
 
         binding.link.setOnClickListener(view -> {
             drawerClose();
-            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP));
+            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
 
         // These are methods implemented on textViews in drawerLayout field
 
+        signIn.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+        });
         share.setOnClickListener(view -> {
             drawerClose();
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -228,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
     private void InitializeViews() {
         webView = findViewById(R.id.webPage);
         drawerLayout = findViewById(R.id.drawerLayout);
+        signIn = findViewById(R.id.signIn);
+        about = findViewById(R.id.about);
         setting = findViewById(R.id.setting);
         bookmarks = findViewById(R.id.bookmarks);
         share = findViewById(R.id.share);
