@@ -8,16 +8,26 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +43,7 @@ import com.monstertechno.adblocker.AdBlockerWebView;
 import com.myinnovation.mbrowser.Fragment.LinkFragment;
 import com.myinnovation.mbrowser.Models.UserModel;
 import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
+import com.myinnovation.mbrowser.UtilitiClasses.MyChromeClient;
 import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
 import com.myinnovation.mbrowser.R;
 import com.myinnovation.mbrowser.databinding.ActivityMainBinding;
@@ -90,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         // WebView implementation
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
+        settings.setAllowFileAccess(true);
+        settings.setAppCacheEnabled(true);
 
         // Ad Blocker Implementation
         if(!blockAd){
@@ -100,13 +111,7 @@ public class MainActivity extends AppCompatActivity {
         } else{
             webView.setWebViewClient(new MyWebViewClient(binding.bar, binding.addresslink, MainActivity.this));
         }
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                binding.bar.setProgress(newProgress);
-            }
-        });
+        webView.setWebChromeClient(new MyChrome());
 
         binding.link.setOnClickListener(view -> {
 //            drawerClose();
@@ -135,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
 
         binding.home.setOnClickListener(view -> {
             binding.addresslink.setText("");
+            webView.clearHistory();
+            webView.clearCache(true);
+            webView.destroy();
             recreate();
         });
 
@@ -239,25 +247,34 @@ public class MainActivity extends AppCompatActivity {
         history = findViewById(R.id.history);
         desktopMode = findViewById(R.id.check_desktop_mode);
         adBlockerSwitch = findViewById(R.id.switch_ad_blocker);
+
+        binding.addresslink.setText("");
     }
 
 
     void LoadUrl(String url) {
-        if(url.isEmpty()){
-            binding.homeImage.setVisibility(View.VISIBLE);
-            webView.setVisibility(View.GONE);
-            Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
-            return;
-        } else{
-            webView.setVisibility(View.VISIBLE);
-            binding.homeImage.setVisibility(View.GONE);
-            boolean matchUrl = Patterns.WEB_URL.matcher(url).matches();
-            if (matchUrl) {
-                webView.loadUrl(url);
-            } else {
-                webView.loadUrl(SEARCH_ENGINE_URL + url);
+        ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnectedOrConnecting()){
+            if(url.isEmpty()){
+                binding.homeImage.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
+                return;
+            } else{
+                webView.setVisibility(View.VISIBLE);
+                binding.homeImage.setVisibility(View.GONE);
+                boolean matchUrl = Patterns.WEB_URL.matcher(url).matches();
+                if (matchUrl) {
+                    webView.loadUrl(url);
+                } else {
+                    webView.loadUrl(SEARCH_ENGINE_URL + url);
+                }
             }
+        } else{
+            Toast.makeText(this, "You are offline", Toast.LENGTH_LONG).show();
         }
+
     }
 
     private void drawerClose(){
@@ -279,19 +296,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void destroyWebView() {
-
-        binding.webViewParent.removeAllViews();
-        webView.clearHistory();
-        webView.clearCache(true);
-        webView.loadUrl("about:blank");
-        webView.onPause();
-        webView.removeAllViews();
-        webView.destroyDrawingCache();
-        webView.pauseTimers();
-        webView.destroy();
-        webView = null;
-    }
+//    private void destroyWebView() {
+//
+//        binding.webViewParent.removeAllViews();
+//        webView.clearHistory();
+//        webView.clearCache(true);
+//        webView.loadUrl("about:blank");
+//        webView.onPause();
+//        webView.removeAllViews();
+//        webView.destroyDrawingCache();
+//        webView.pauseTimers();
+//        webView.destroy();
+//        webView = null;
+//    }
 
     private void checkCurrentUser(){
         if(mAuth.getCurrentUser() != null){
@@ -337,12 +354,83 @@ public class MainActivity extends AppCompatActivity {
         transaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            binding.toolbar3.setVisibility(View.GONE);
+        }
+        else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            binding.toolbar3.setVisibility(View.VISIBLE);
+        }
+    }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        webView.saveState(outState);
+    }
 
-//    @Override
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        webView.restoreState(savedInstanceState);
+    }
+
+    //    @Override
 //    public void onFragmentInteraction(String sendBackText) {
 //        LoadUrl(sendBackText);
 //        drawerClose();
 //        onBackPressed();
 //    }
+
+    private class MyChrome extends WebChromeClient {
+
+        private View mCustomView;
+        private WebChromeClient.CustomViewCallback mCustomViewCallback;
+        protected FrameLayout mFullscreenContainer;
+        private int mOriginalOrientation;
+        private int mOriginalSystemUiVisibility;
+
+        MyChrome() {}
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onPermissionRequest(final PermissionRequest request) {
+            request.grant(request.getResources());
+        }
+
+        public Bitmap getDefaultVideoPoster()
+        {
+            if (mCustomView == null) {
+                return null;
+            }
+            return BitmapFactory.decodeResource(getApplicationContext().getResources(), 2130837573);
+        }
+
+        public void onHideCustomView()
+        {
+            ((FrameLayout)getWindow().getDecorView()).removeView(this.mCustomView);
+            this.mCustomView = null;
+            getWindow().getDecorView().setSystemUiVisibility(this.mOriginalSystemUiVisibility);
+            setRequestedOrientation(this.mOriginalOrientation);
+            this.mCustomViewCallback.onCustomViewHidden();
+            this.mCustomViewCallback = null;
+        }
+
+        public void onShowCustomView(View paramView, WebChromeClient.CustomViewCallback paramCustomViewCallback)
+        {
+            if (this.mCustomView != null)
+            {
+                onHideCustomView();
+                return;
+            }
+            this.mCustomView = paramView;
+            this.mOriginalSystemUiVisibility = getWindow().getDecorView().getSystemUiVisibility();
+            this.mOriginalOrientation = getRequestedOrientation();
+            this.mCustomViewCallback = paramCustomViewCallback;
+            ((FrameLayout)getWindow().getDecorView()).addView(this.mCustomView, new FrameLayout.LayoutParams(-1, -1));
+            getWindow().getDecorView().setSystemUiVisibility(3846 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        }
+    }
 }
