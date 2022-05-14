@@ -65,11 +65,11 @@
                 android:padding="8dp"
                 android:text="@string/share"
                 android:textColor="@color/black"
-                android:drawableStart="@drawable/ic_share"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/about" />
+                app:layout_constraintTop_toBottomOf="@+id/about"
+                app:drawableStartCompat="@drawable/ic_share" />
 
             <View
                 android:id="@+id/view"

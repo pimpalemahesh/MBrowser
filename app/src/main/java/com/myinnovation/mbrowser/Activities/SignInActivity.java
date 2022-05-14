@@ -1,8 +1,10 @@
 package com.myinnovation.mbrowser.Activities;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -116,8 +118,25 @@ public class SignInActivity extends AppCompatActivity {
 
     private void SignInUsingGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 101);
+        someActivityResultLauncher.launch(signInIntent);
     }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    Intent data = result.getData();
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+                    try {
+                        task.getResult(ApiException.class);
+                        NavigationToNextActivity();
+                    } catch (ApiException e){
+                        Toast.makeText(SignInActivity.this, "Something went wrong" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
 
     private void validateFieldsForLogin() {
         email = _email.getText().toString();
@@ -281,21 +300,6 @@ public class SignInActivity extends AppCompatActivity {
         _confirmPasswordCardView = findViewById(R.id.cPasswordCardView);
 
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 101){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-                task.getResult(ApiException.class);
-                NavigationToNextActivity();
-            } catch (ApiException e){
-                Toast.makeText(this, "Something went wrong" + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private void NavigationToNextActivity(){

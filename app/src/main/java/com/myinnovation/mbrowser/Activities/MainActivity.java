@@ -68,20 +68,20 @@ public class MainActivity extends AppCompatActivity {
     boolean blockAd = false;
     boolean isFragmentOpened = false;
 
-    private String PREVIOUSURL = "";
     private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
-    private final String SEARCH_ENGINE_URL = "google.com/search?q=";
-    private final String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain,forest,river,stars,space,waterfall,snow,rain";
+    private String SEARCH_ENGINE_URL = "google.com/search?q=";
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         InitializeViews();
+        checkSearchEngine();
         checkCurrentUser();
         LoadHomeImage();
         drawerLayout.setVisibility(View.GONE);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             Bundle data = getIntent().getExtras();
             if(data != null){
-                PREVIOUSURL = data.getString("URL");
+                String PREVIOUSURL = data.getString("URL");
                 LoadUrl(PREVIOUSURL);
                 webView.setVisibility(View.VISIBLE);
                 binding.homeImage.setVisibility(View.GONE);
@@ -144,9 +144,7 @@ public class MainActivity extends AppCompatActivity {
             imm.showSoftInput(binding.addresslink, 0);
         });
 
-        binding.home.setOnClickListener(view -> {
-            gotoHomePage();
-        });
+        binding.home.setOnClickListener(view -> gotoHomePage());
 
         binding.back.setOnClickListener(view -> {
             drawerClose();
@@ -183,9 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
         // These are methods implemented on textViews in drawerLayout field
 
-        signIn.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, SignInActivity.class));
-        });
+        signIn.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, SignInActivity.class)));
 
         share.setOnClickListener(view -> {
             drawerClose();
@@ -196,29 +192,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        setting.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, SettingActivity.class));
-        });
+        setting.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, SettingActivity.class)));
 
-        history.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
-        });
+        history.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show());
 
-        bookmarks.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
-        });
+        bookmarks.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show());
 
         desktopMode.setOnCheckedChangeListener((compoundButton, b) -> {
             if(desktopMode.isChecked()){
                 webView.getSettings().setUserAgentString(DESKTOP_USER_AGENT);
-                webView.reload();
-                drawerClose();
             }
             else{
                 webView.getSettings().setUserAgentString(MOBILE_USER_AGENT);
-                webView.reload();
-                drawerClose();
             }
+            webView.reload();
+            drawerClose();
         });
 
         adBlockerSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
@@ -228,7 +216,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void checkSearchEngine() {
+        String searchEngine = "Google";
+        if(searchEngine.equals("Google")){
+            SEARCH_ENGINE_URL = "google.com/search?q=";
+            binding.addresslink.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icongoogle, 0, 0, 0);
+        }
+        else if(searchEngine.equals("DuckDuckGo")){
+            SEARCH_ENGINE_URL = "duckduckgo.com/?q";
+            binding.addresslink.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icongoogle, 0, 0, 0);
+        }
+    }
+
     private void LoadHomeImage() {
+        String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain,forest,river,stars,space,waterfall,snow,rain";
         Picasso.get()
                 .load(HOMEIMAGEURL)
                 .placeholder(R.drawable.ic_logo)
@@ -262,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.homeImage.setVisibility(View.VISIBLE);
                 webView.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
-                return;
             } else{
                 webView.setVisibility(View.VISIBLE);
                 binding.homeImage.setVisibility(View.GONE);
@@ -307,21 +307,6 @@ public class MainActivity extends AppCompatActivity {
             closeFragment();
         }
     }
-
-
-//    private void destroyWebView() {
-//
-//        binding.webViewParent.removeAllViews();
-//        webView.clearHistory();
-//        webView.clearCache(true);
-//        webView.loadUrl("about:blank");
-//        webView.onPause();
-//        webView.removeAllViews();
-//        webView.destroyDrawingCache();
-//        webView.pauseTimers();
-//        webView.destroy();
-//        webView = null;
-//    }
 
     private void checkCurrentUser(){
         if(mAuth.getCurrentUser() != null){
@@ -398,13 +383,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         webView.restoreState(savedInstanceState);
     }
-
-    //    @Override
-//    public void onFragmentInteraction(String sendBackText) {
-//        LoadUrl(sendBackText);
-//        drawerClose();
-//        onBackPressed();
-//    }
 
     private class MyChrome extends WebChromeClient {
 

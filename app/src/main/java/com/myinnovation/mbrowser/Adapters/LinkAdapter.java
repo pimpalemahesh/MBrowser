@@ -45,10 +45,6 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         });
-//        Picasso.get()
-//                .load(model.getUrl_image())
-//                .placeholder(R.drawable.ic_computer)
-//                .into(holder.binding.urlImage);
     }
 
 
@@ -57,7 +53,7 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkViewHolder
         return list.size();
     }
 
-    public class LinkViewHolder extends RecyclerView.ViewHolder{
+    public static class LinkViewHolder extends RecyclerView.ViewHolder{
         SingleLinkLayoutBinding binding;
 
         public LinkViewHolder(@NonNull View itemView) {

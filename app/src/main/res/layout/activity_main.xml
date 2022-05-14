@@ -52,7 +52,8 @@
                 android:padding="8dp"
                 android:textColor="@color/grey"
                 android:textSize="14sp"
-                tools:ignore="TouchTargetSizeCheck" />
+                tools:ignore="TouchTargetSizeCheck"
+                android:autofillHints="Youtube" />
 
         </soup.neumorphism.NeumorphCardView>
 
@@ -64,7 +65,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/neumorphCardView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/neumorphCardView"
-            app:srcCompat="@drawable/ic_cancle" />
+            app:srcCompat="@drawable/ic_cancle"
+            android:contentDescription="@string/todo" />
 
         <ImageView
             android:id="@+id/homeImage"
@@ -77,7 +79,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView" />
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView"
+            android:contentDescription="@string/todo" />
 
         <WebView
             android:id="@+id/webPage"
@@ -137,7 +140,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                android:baselineAligned="false">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/home"
@@ -256,7 +260,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/oswald"
-                        android:text="Forward"
+                        android:text="@string/forward"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@id/rightArrowImage"
@@ -288,7 +292,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/oswald"
-                        android:text="More"
+                        android:text="@string/more"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@id/moreImage"

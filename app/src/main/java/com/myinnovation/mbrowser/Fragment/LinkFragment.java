@@ -2,6 +2,7 @@ package com.myinnovation.mbrowser.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 
 public class LinkFragment extends Fragment {
 
-    private static String SendURL = "google.com";
     FragmentLinkBinding binding;
     ArrayList<LinkModel> impList;
     LinkAdapter impAdapter;
@@ -36,7 +36,7 @@ public class LinkFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLinkBinding.inflate(inflater);
 

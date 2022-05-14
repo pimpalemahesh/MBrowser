@@ -33,6 +33,9 @@
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">56789</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="todo">TODO</string>
+    <string name="more">More</string>
+    <string name="forward">Forward</string>
 
 
 </resources>
