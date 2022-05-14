@@ -43,7 +43,6 @@ import com.monstertechno.adblocker.AdBlockerWebView;
 import com.myinnovation.mbrowser.Fragment.LinkFragment;
 import com.myinnovation.mbrowser.Models.UserModel;
 import com.myinnovation.mbrowser.UtilitiClasses.AdBlockViewClient;
-import com.myinnovation.mbrowser.UtilitiClasses.MyChromeClient;
 import com.myinnovation.mbrowser.UtilitiClasses.MyWebViewClient;
 import com.myinnovation.mbrowser.R;
 import com.myinnovation.mbrowser.databinding.ActivityMainBinding;
@@ -56,14 +55,19 @@ import soup.neumorphism.NeumorphButton;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    LinkFragment fragment = new LinkFragment();
+
     TextView setting, bookmarks, share, about, history;
     ImageView profileImage;
     NeumorphButton signIn;
+
     WebView webView;
     DrawerLayout drawerLayout;
     CheckBox desktopMode;
     SwitchCompat adBlockerSwitch;
     boolean blockAd = false;
+    boolean isFragmentOpened = false;
+
     private String PREVIOUSURL = "";
     private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
@@ -114,9 +118,12 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebChromeClient(new MyChrome());
 
         binding.link.setOnClickListener(view -> {
-//            drawerClose();
-//            startActivity(new Intent(MainActivity.this, LinksActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            openFragment();
+            if(isFragmentOpened){
+                closeFragment();
+            }
+            else{
+                openFragment();
+            }
         });
 
         binding.addresslink.setOnEditorActionListener((textView, actionId, keyEvent) -> {
@@ -130,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         binding.clearText.setOnClickListener(view -> {
             drawerClose();
             binding.addresslink.setText("");
@@ -139,11 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.home.setOnClickListener(view -> {
-            binding.addresslink.setText("");
-            webView.clearHistory();
-            webView.clearCache(true);
-            webView.destroy();
-            recreate();
+            gotoHomePage();
         });
 
         binding.back.setOnClickListener(view -> {
@@ -164,8 +166,7 @@ public class MainActivity extends AppCompatActivity {
             drawerClose();
             if(binding.addresslink.getText().toString().isEmpty()){
                 LoadHomeImage();
-                recreate();
-                LoadUrl("");
+                gotoHomePage();
             } else{
                 webView.reload();
             }
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         signIn.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, SignInActivity.class));
         });
+
         share.setOnClickListener(view -> {
             drawerClose();
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -277,6 +279,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void gotoHomePage() {
+        binding.addresslink.setText("");
+        webView.clearHistory();
+        webView.clearCache(true);
+        webView.destroy();
+        recreate();
+    }
+
     private void drawerClose(){
         if(drawerLayout.getVisibility() == View.VISIBLE){
             drawerLayout.setVisibility(View.GONE);
@@ -290,8 +300,11 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
-        } else {
-
+        } else{
+            gotoHomePage();
+        }
+        if(isFragmentOpened){
+            closeFragment();
         }
     }
 
@@ -346,12 +359,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void openFragment() {
-        LinkFragment fragment = new LinkFragment();
+        isFragmentOpened = true;
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
+    }
+
+    public void closeFragment(){
+        isFragmentOpened = false;
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.remove(fragment);
+        trans.commit();
+        manager.popBackStack();
     }
 
     @Override

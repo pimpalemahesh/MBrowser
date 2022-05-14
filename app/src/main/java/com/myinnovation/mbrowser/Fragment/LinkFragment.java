@@ -71,9 +71,7 @@ public class LinkFragment extends Fragment {
         binding.trendingUrlRclv.setHasFixedSize(true);
         binding.trendingUrlRclv.setAdapter(trendAdapter);
 
-
         return binding.getRoot();
     }
-
 
 }
