@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.FeedbackActivity">
+
+    <soup.neumorphism.NeumorphButton
+        android:id="@+id/neumorphButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/oswald"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="@string/give_your_feedback"
+        android:textColor="@color/purple_700"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/feedbackText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:background="@android:color/transparent"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/oswald"
+        android:hint="@string/enter_feedback"
+        android:inputType="textMultiLine"
+        android:padding="16dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/neumorphButton" />
+
+    <soup.neumorphism.NeumorphButton
+        android:id="@+id/sendFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_share"
+        android:drawableEnd="@drawable/ic_share"
+        android:drawablePadding="8dp"
+        android:padding="24dp"
+        android:text="@string/feedback"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedbackText" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/textbox"
+        app:layout_constraintBottom_toBottomOf="@+id/feedbackText"
+        app:layout_constraintEnd_toEndOf="@+id/feedbackText"
+        app:layout_constraintStart_toStartOf="@+id/feedbackText"
+        app:layout_constraintTop_toTopOf="@+id/feedbackText" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

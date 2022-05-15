@@ -25,7 +25,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,6 +33,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,16 +58,16 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     LinkFragment fragment = new LinkFragment();
 
-    TextView setting, bookmarks, share, about, history;
+    TextView logout, setting, bookmarks, share, about, feedback;
     ImageView profileImage;
     NeumorphButton signIn;
 
-    WebView webView;
     DrawerLayout drawerLayout;
     CheckBox desktopMode;
     SwitchCompat adBlockerSwitch;
     boolean blockAd = false;
     boolean isFragmentOpened = false;
+    boolean isUserSignIn = false;
 
     private static final String DESKTOP_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
     private static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 4.4; en-us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
@@ -93,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
             if(data != null){
                 String PREVIOUSURL = data.getString("URL");
                 LoadUrl(PREVIOUSURL);
-                webView.setVisibility(View.VISIBLE);
+                binding.webPage.setVisibility(View.VISIBLE);
                 binding.homeImageContainer.setVisibility(View.GONE);
-                webView.reload();
+                binding.webPage.reload();
                 getIntent().removeExtra("URL");
             }
         } catch (Exception e){
@@ -103,22 +104,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // WebView implementation
-        WebSettings settings = webView.getSettings();
+        WebSettings settings = binding.webPage.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAppCacheEnabled(true);
 
         // Ad Blocker Implementation
         if(!blockAd){
-            new AdBlockerWebView.init(this).initializeWebView(webView);
-            webView.setWebViewClient(new AdBlockViewClient(binding.bar, binding.addresslink, MainActivity.this));
+            new AdBlockerWebView.init(this).initializeWebView(binding.webPage);
+            binding.webPage.setWebViewClient(new AdBlockViewClient(binding.bar, binding.addresslink, MainActivity.this));
         } else{
-            webView.setWebViewClient(new MyWebViewClient(binding.bar, binding.addresslink, MainActivity.this));
+            binding.webPage.setWebViewClient(new MyWebViewClient(binding.bar, binding.addresslink, MainActivity.this));
         }
-        webView.setWebChromeClient(new MyChrome());
+        binding.webPage.setWebChromeClient(new MyChrome());
 
         binding.link.setOnClickListener(view -> {
-            binding.bar.setVisibility(View.VISIBLE);
+            drawerClose();
             if(isFragmentOpened){
                 closeFragment();
             }
@@ -154,15 +155,15 @@ public class MainActivity extends AppCompatActivity {
 
         binding.back.setOnClickListener(view -> {
             drawerClose();
-            if (webView.canGoBack()) {
-                webView.goBack();
+            if (binding.webPage.canGoBack()) {
+                binding.webPage.goBack();
             }
         });
 
         binding.forward.setOnClickListener(view -> {
             drawerClose();
-            if (webView.canGoForward()) {
-                webView.goForward();
+            if (binding.webPage.canGoForward()) {
+                binding.webPage.goForward();
             }
         });
 
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 LoadHomeImage();
                 gotoHomePage();
             } else{
-                webView.reload();
+                binding.webPage.reload();
             }
         });
 
@@ -189,36 +190,81 @@ public class MainActivity extends AppCompatActivity {
 
         signIn.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, SignInActivity.class)));
 
+        logout.setOnClickListener(view -> {
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+            if(mAuth.getCurrentUser() != null){
+                mAuth.signOut();
+                drawerClose();
+                Toast.makeText(MainActivity.this, "Logged out successfully", Toast.LENGTH_LONG).show();
+                recreate();
+            }
+            else if(account != null){
+                GoogleSignInOptions gso = new GoogleSignInOptions.
+                        Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                        build();
+
+                GoogleSignInClient googleSignInClient=GoogleSignIn.getClient(this,gso);
+                googleSignInClient.signOut().addOnSuccessListener(unused -> {
+                    drawerClose();
+                    Toast.makeText(MainActivity.this, "Logged out successfully", Toast.LENGTH_LONG).show();
+                    recreate();
+                });
+
+            } else{
+                drawerClose();
+                Toast.makeText(MainActivity.this, "You are already logout", Toast.LENGTH_LONG).show();
+            }
+
+        });
+
         share.setOnClickListener(view -> {
             drawerClose();
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+            intent.putExtra(Intent.EXTRA_TEXT, binding.webPage.getUrl());
             intent.setType("text/plain");
             startActivity(intent);
         });
 
-        setting.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, SettingActivity.class)));
+        setting.setOnClickListener(view -> {
+            drawerClose();
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
+        });
 
-        history.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show());
-
-        bookmarks.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show());
+        bookmarks.setOnClickListener(view -> {
+            if(isUserSignIn){
+                drawerClose();
+                startActivity(new Intent(this, BookMarksActivity.class));
+            } else{
+                Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
+            }
+        });
 
         desktopMode.setOnCheckedChangeListener((compoundButton, b) -> {
             if(desktopMode.isChecked()){
-                webView.getSettings().setUserAgentString(DESKTOP_USER_AGENT);
+                binding.webPage.getSettings().setUserAgentString(DESKTOP_USER_AGENT);
             }
             else{
-                webView.getSettings().setUserAgentString(MOBILE_USER_AGENT);
+                binding.webPage.getSettings().setUserAgentString(MOBILE_USER_AGENT);
             }
-            webView.reload();
+            binding.webPage.reload();
             drawerClose();
         });
 
         adBlockerSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
             blockAd = checked;
             drawerClose();
-            webView.reload();
+            binding.webPage.reload();
+        });
+
+        feedback.setOnClickListener(view -> {
+            if(isUserSignIn){
+                drawerClose();
+                startActivity(new Intent(this, FeedbackActivity.class));
+            } else{
+                Toast.makeText(MainActivity.this, "Sign in required", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
@@ -238,9 +284,12 @@ public class MainActivity extends AppCompatActivity {
         String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain,forest,river,stars,space,waterfall,snow,rain";
         String[] URLs = new String[]{"https://source.unsplash.com/1600x900/?nature", "https://source.unsplash.com/1600x900/?water", "https://source.unsplash.com/1600x900/?sea", "https://source.unsplash.com/1600x900/?flower",
                                         "https://source.unsplash.com/1600x900/?forest", "https://source.unsplash.com/1600x900/?mountain", "https://source.unsplash.com/1600x900/?river", "https://source.unsplash.com/1600x900/?forest",
+                                        "https://source.unsplash.com/1600x900/?sunrise", "https://source.unsplash.com/1600x900/?sunset", "https://source.unsplash.com/1600x900/?ocean", "https://source.unsplash.com/1600x900/?canyon",
+                                        "https://source.unsplash.com/1600x900/?sand,bay", "https://source.unsplash.com/1600x900/?hill", "https://source.unsplash.com/1600x900/?ice", "https://source.unsplash.com/1600x900/?clouds",
+                                        "https://source.unsplash.com/1600x900/?forest", "https://source.unsplash.com/1600x900/?mountain", "https://source.unsplash.com/1600x900/?ice", "https://source.unsplash.com/1600x900/?cloud",
                                         "https://source.unsplash.com/1600x900/?space", "https://source.unsplash.com/1600x900/?waterfall", "https://source.unsplash.com/1600x900/?snow", "https://source.unsplash.com/1600x900/?rain"};
 
-        int b = (int)(Math.random()*(11-1+1)+1);
+        int b = (int)(Math.random()*(20+1)+1);
 
         Picasso.get()
                 .load(URLs[b])
@@ -252,18 +301,20 @@ public class MainActivity extends AppCompatActivity {
 
         // DrawerLayout Views
         profileImage = findViewById(R.id.profileImage);
-        webView = findViewById(R.id.webPage);
+        logout = findViewById(R.id.logout);
         drawerLayout = findViewById(R.id.drawerLayout);
         signIn = findViewById(R.id.signIn);
         about = findViewById(R.id.about);
         setting = findViewById(R.id.setting);
         bookmarks = findViewById(R.id.bookmarks);
         share = findViewById(R.id.share);
-        history = findViewById(R.id.history);
         desktopMode = findViewById(R.id.check_desktop_mode);
         adBlockerSwitch = findViewById(R.id.switch_ad_blocker);
+        feedback = findViewById(R.id.feedback);
+
 
         binding.addresslink.setText("");
+
 
     }
 
@@ -274,16 +325,16 @@ public class MainActivity extends AppCompatActivity {
         if(networkInfo != null && networkInfo.isConnectedOrConnecting()){
             if(url.isEmpty()){
                 binding.homeImage.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                binding.webPage.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, "Empty URL cannot be processed", Toast.LENGTH_LONG).show();
             } else{
-                webView.setVisibility(View.VISIBLE);
+                binding.webPage.setVisibility(View.VISIBLE);
                 binding.homeImage.setVisibility(View.GONE);
                 boolean matchUrl = Patterns.WEB_URL.matcher(url).matches();
                 if (matchUrl) {
-                    webView.loadUrl(url);
+                    binding.webPage.loadUrl(url);
                 } else {
-                    webView.loadUrl(SEARCH_ENGINE_URL + url);
+                    binding.webPage.loadUrl(SEARCH_ENGINE_URL + url);
                 }
             }
         } else{
@@ -294,9 +345,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void gotoHomePage() {
         binding.addresslink.setText("");
-        webView.clearHistory();
-        webView.clearCache(true);
-        webView.destroy();
+        binding.webPage.clearHistory();
+        binding.webPage.clearCache(true);
+        binding.webPage.destroy();
         recreate();
     }
 
@@ -306,13 +357,13 @@ public class MainActivity extends AppCompatActivity {
         }
         if(binding.homeImageContainer.getVisibility() == View.VISIBLE){
             binding.homeImageContainer.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
+            binding.webPage.setVisibility(View.VISIBLE);
         }
     }
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
+        if (binding.webPage.canGoBack()) {
+            binding.webPage.goBack();
         } else{
             gotoHomePage();
         }
@@ -323,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkCurrentUser(){
         if(mAuth.getCurrentUser() != null){
+            isUserSignIn = true;
             FirebaseDatabase mBase = FirebaseDatabase.getInstance();
             mBase.getReference().child("Users")
                     .child(Objects.requireNonNull(mAuth.getUid()))
@@ -351,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null){
+            isUserSignIn = true;
             signIn.setText(account.getDisplayName());
             profileImage.setImageURI(account.getPhotoUrl());
             binding.homeUserName.setText(account.getDisplayName());
@@ -365,7 +418,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
-        binding.bar.setVisibility(View.INVISIBLE);
     }
 
     public void closeFragment(){
@@ -375,7 +427,6 @@ public class MainActivity extends AppCompatActivity {
         trans.remove(fragment);
         trans.commit();
         manager.popBackStack();
-        binding.bar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -392,13 +443,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        webView.saveState(outState);
+        binding.webPage.saveState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        webView.restoreState(savedInstanceState);
+        binding.webPage.restoreState(savedInstanceState);
     }
 
     private class MyChrome extends WebChromeClient {

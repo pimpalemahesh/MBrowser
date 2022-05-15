@@ -43,33 +43,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
             <TextView
-                android:id="@+id/about"
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:gravity="center"
-                android:text="@string/about"
+                android:text="@string/logout"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/signIn"
-                app:drawableLeftCompat="@android:drawable/ic_menu_info_details"
+                app:drawableLeftCompat="@drawable/ic_logout"
                 app:drawableTint="@color/black" />
 
             <TextView
-                android:id="@+id/share"
+                android:id="@+id/about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/share"
+                android:text="@string/about"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/about"
-                app:drawableStartCompat="@drawable/ic_share" />
+                app:layout_constraintTop_toBottomOf="@+id/logout"
+                app:drawableTint="@color/black"
+                app:drawableStartCompat="@android:drawable/ic_menu_info_details" />
 
             <View
                 android:id="@+id/view"
@@ -79,7 +80,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/share" />
+                app:layout_constraintTop_toBottomOf="@+id/about" />
+
+            <TextView
+                android:id="@+id/share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/share"
+                android:textColor="@color/black"
+                app:drawableStartCompat="@drawable/ic_share"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view" />
 
             <TextView
                 android:id="@+id/setting"
@@ -94,7 +110,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/history" />
+                app:layout_constraintTop_toBottomOf="@+id/share" />
 
             <TextView
                 android:id="@+id/bookmarks"
@@ -110,21 +126,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/setting"
                 app:layout_constraintTop_toBottomOf="@+id/setting" />
-
-            <TextView
-                android:id="@+id/history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@string/history"
-                android:textColor="@color/black"
-                app:drawableStartCompat="@drawable/ic_history"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view" />
 
             <TextView
                 android:id="@+id/desktop_site"
@@ -176,6 +177,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/desktop_site"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/feedback"
+                android:textColor="@color/black"
+                app:drawableStartCompat="@drawable/ic_feedback"
+                app:layout_constraintEnd_toEndOf="@+id/setting"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/setting"
+                app:layout_constraintTop_toBottomOf="@+id/ad_blocker"
+                app:drawableTint="@color/black" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -117,6 +117,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void SignInUsingGoogle() {
+        _progressBar.setVisibility(View.VISIBLE);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         someActivityResultLauncher.launch(signInIntent);
     }
@@ -133,6 +134,7 @@ public class SignInActivity extends AppCompatActivity {
                         task.getResult(ApiException.class);
                         NavigationToNextActivity();
                     } catch (ApiException e){
+                        _progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(SignInActivity.this, "Something went wrong" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -302,7 +304,8 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
-    private void NavigationToNextActivity(){
+    private void    NavigationToNextActivity(){
+        _progressBar.setVisibility(View.INVISIBLE);
         finish();
         startActivity(new Intent(this, MainActivity.class));
     }
