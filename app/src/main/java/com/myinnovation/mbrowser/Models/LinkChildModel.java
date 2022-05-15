@@ -1,23 +1,18 @@
 package com.myinnovation.mbrowser.Models;
 
-public class LinkModel {
+public class LinkChildModel {
 
     int url_img;
     String Url_image, Url_name, url;
 
-    public LinkModel(String url_name, String url_image, String url) {
-        this.Url_image = url_image;
-        this.Url_name = url_name;
-        this.url = url;
-    }
 
-    public LinkModel(String url_name, int url_img, String url) {
+    public LinkChildModel(String url_name, int url_img, String url) {
         this.url_img = url_img;
         this.Url_name = url_name;
         this.url = url;
     }
 
-    public LinkModel() {
+    public LinkChildModel() {
     }
 
     public String getUrl() {

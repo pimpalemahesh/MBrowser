@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 String PREVIOUSURL = data.getString("URL");
                 LoadUrl(PREVIOUSURL);
                 webView.setVisibility(View.VISIBLE);
-                binding.homeImage.setVisibility(View.GONE);
+                binding.homeImageContainer.setVisibility(View.GONE);
                 webView.reload();
                 getIntent().removeExtra("URL");
             }
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebChromeClient(new MyChrome());
 
         binding.link.setOnClickListener(view -> {
+            binding.bar.setVisibility(View.VISIBLE);
             if(isFragmentOpened){
                 closeFragment();
             }
@@ -144,7 +145,12 @@ public class MainActivity extends AppCompatActivity {
             imm.showSoftInput(binding.addresslink, 0);
         });
 
-        binding.home.setOnClickListener(view -> gotoHomePage());
+        binding.home.setOnClickListener(view -> {
+            if(isFragmentOpened){
+                closeFragment();
+            }
+            gotoHomePage();
+        });
 
         binding.back.setOnClickListener(view -> {
             drawerClose();
@@ -252,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         adBlockerSwitch = findViewById(R.id.switch_ad_blocker);
 
         binding.addresslink.setText("");
+
     }
 
 
@@ -291,8 +298,8 @@ public class MainActivity extends AppCompatActivity {
         if(drawerLayout.getVisibility() == View.VISIBLE){
             drawerLayout.setVisibility(View.GONE);
         }
-        if(binding.homeImage.getVisibility() == View.VISIBLE){
-            binding.homeImage.setVisibility(View.GONE);
+        if(binding.homeImageContainer.getVisibility() == View.VISIBLE){
+            binding.homeImageContainer.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
         }
     }
@@ -321,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
                                     UserModel user = snapshot.getValue(UserModel.class);
                                     assert user != null;
                                     signIn.setText(user.getUsername());
+                                    binding.homeUserName.setText(user.getUsername());
                             }
                             else{
                                 signIn.setText("User In");
@@ -339,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
         if(account != null){
             signIn.setText(account.getDisplayName());
             profileImage.setImageURI(account.getPhotoUrl());
+            binding.homeUserName.setText(account.getDisplayName());
         }
     }
 
@@ -350,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
+        binding.bar.setVisibility(View.INVISIBLE);
     }
 
     public void closeFragment(){
@@ -359,6 +369,7 @@ public class MainActivity extends AppCompatActivity {
         trans.remove(fragment);
         trans.commit();
         manager.popBackStack();
+        binding.bar.setVisibility(View.INVISIBLE);
     }
 
     @Override

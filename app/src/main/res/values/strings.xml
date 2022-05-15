@@ -36,6 +36,7 @@
     <string name="todo">TODO</string>
     <string name="more">More</string>
     <string name="forward">Forward</string>
+    <string name="user">User</string>
 
 
 </resources>

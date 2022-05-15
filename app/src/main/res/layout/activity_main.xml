@@ -68,19 +68,63 @@
             app:srcCompat="@drawable/ic_cancle"
             android:contentDescription="@string/todo" />
 
-        <ImageView
-            android:id="@+id/homeImage"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeImageContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="1dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_logo"
             app:layout_constraintBottom_toTopOf="@+id/toolbar3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView"
-            android:contentDescription="@string/todo" />
+            app:layout_constraintTop_toBottomOf="@+id/neumorphCardView">
+
+            <TextView
+                android:id="@+id/welcometxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="Welcome"
+                android:elevation="10dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/oswald"
+                android:textSize="32sp"
+                android:textColor="@color/white"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/homeUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:elevation="10dp"
+                android:fontFamily="@font/oswald"
+                android:text="@string/user"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/welcometxt"
+                app:layout_constraintStart_toStartOf="@+id/welcometxt"
+                app:layout_constraintTop_toBottomOf="@+id/welcometxt" />
+
+            <ImageView
+                android:id="@+id/homeImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/todo"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_logo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <WebView
             android:id="@+id/webPage"
