@@ -236,8 +236,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void LoadHomeImage() {
         String HOMEIMAGEURL = "https://source.unsplash.com/1600x900/?nature,water,flower,sea,mountain,forest,river,stars,space,waterfall,snow,rain";
+        String[] URLs = new String[]{"https://source.unsplash.com/1600x900/?nature", "https://source.unsplash.com/1600x900/?water", "https://source.unsplash.com/1600x900/?sea", "https://source.unsplash.com/1600x900/?flower",
+                                        "https://source.unsplash.com/1600x900/?forest", "https://source.unsplash.com/1600x900/?mountain", "https://source.unsplash.com/1600x900/?river", "https://source.unsplash.com/1600x900/?forest",
+                                        "https://source.unsplash.com/1600x900/?space", "https://source.unsplash.com/1600x900/?waterfall", "https://source.unsplash.com/1600x900/?snow", "https://source.unsplash.com/1600x900/?rain"};
+
+        int b = (int)(Math.random()*(11-1+1)+1);
+
         Picasso.get()
-                .load(HOMEIMAGEURL)
+                .load(URLs[b])
                 .placeholder(R.drawable.ic_logo)
                 .into(binding.homeImage);
     }
